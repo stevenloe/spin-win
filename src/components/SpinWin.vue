@@ -5,34 +5,15 @@
         <div>
           <div class="heading marg-right">
             Spin & Win
-            <span v-show="justAdded.name" class="gray marg-right"
-              ><span class="bolder">Last Entry: </span>
-              {{ justAdded.entries }} of : {{ justAdded.name }} </span
-            ><span class="gray"> Total Entries: {{ contenders.length }}</span>
+            <span class="gray"> Total chances: {{ contenders.length }}</span>
           </div>
 
-          <b-alert show variant="danger" v-show="hasError">{{
-            errorMsg
-          }}</b-alert>
+          <b-alert show variant="danger" v-show="errorMsg.length">{{ errorMsg }}</b-alert>
 
-          <b-input-group
-            prepend="Add Contender:"
-            class="mb-2"
-            @keyup.enter="add()"
-          >
-            <b-form-input
-              v-model="contender"
-              ref="name"
-              placeholder="Name"
-              @focus="hasError = false"
-            ></b-form-input>
+          <b-input-group prepend="Add Contender:" class="mb-2" @keyup.enter="add()">
+            <b-form-input v-model="contender" ref="name" placeholder="Name" @focus="errorMsg = ''"></b-form-input>
 
-            <b-form-input
-              type="number"
-              placeholder="entries"
-              v-model="entries"
-              @focus="hasError = false"
-            ></b-form-input>
+            <b-form-input type="number" placeholder="chances" v-model="chances" @focus="errorMsg = ''"></b-form-input>
 
             <b-input-group-append
               ><b-button variant="info" v-on:click="add()">
@@ -59,9 +40,10 @@
             v-for="(contender, i) in contenders"
             v-bind:key="contender.id"
           >
-            {{ contender.text }}
+            <span>{{ contender.text }}</span>
+            <span>{{ contender.chances }}</span>
 
-            <b-button @click="delete(i)">X</b-button>
+            <b-button @click="deleteContender(i)">X</b-button>
           </b-list-group-item>
         </b-list-group>
       </b-container>
@@ -76,59 +58,75 @@ export default {
     return {
       contender: '',
       contenders: [],
-      entries: 1,
+      chances: 1,
       winner: '',
-      justAdded: { text: '', entries: 0 },
       errorMsg: '',
-      hasError: false,
     }
+  },
+  mounted() {
+    this.$refs.name.focus()
   },
   methods: {
     add() {
-      if (this.contender.trim().length === 0) {
-        this.errorMsg = 'Name cannot be blank.'
-        this.hasError = true
-        return
-      } else if (this.entries < 1) {
-        this.errorMsg = 'entries must be greater than 0.'
-        this.hasError = true
-        return
-      }
+      const name = this.contender.replace(/\b\w/g, (c) => c.toUpperCase()).trim()
 
-      this.hasError = false
-      let date = new Date().valueOf().toString()
-      this.justAdded.name = this.contender
-      this.justAdded.entries = this.entries
+      if (this.isInputValid(name) !== true) return
 
-      for (let index = 0; index < this.entries; index++) {
-        this.contenders.unshift({
-          text: this.contender,
-          id: date + '-' + index,
-        })
-      }
+      this.contenders.unshift({
+        text: name,
+        chances: this.chances,
+      })
+
       this.contender = ''
-      this.entries = 1
-
+      this.chances = 1
       this.$refs.name.focus()
     },
-    delete(i) {
+    deleteContender(i) {
       this.contenders.splice(i, 1)
-      contenders
+    },
+    isInputValid(name) {
+      let msg = ''
+      let isValid = true
+      if (this.contenders.some((elem) => elem.text === name)) {
+        msg += 'A contestant with that name has already been entered. Please enter a different name. '
+        isValid = false
+      }
+      if (name.length === 0) {
+        msg += 'Name cannot be blank. '
+        isValid = false
+      }
+      if (this.chances < 1) {
+        msg += 'Number of entries must be a number greater than 0. '
+        isValid = false
+      }
+      this.errorMsg = msg
+      return isValid
     },
     spin() {
       if (this.contenders.length === 0) {
-        this.errorMsg =
-          'You must add contenders before a winner can be selected.'
-        this.hasError = true
+        this.errorMsg = 'You must add contenders before a winner can be selected.'
         return
       }
 
-      let windex = Math.floor(
-        Math.random() * Math.floor(this.contenders.length)
-      )
-      let winnerData = this.contenders[windex]
-      this.winner = winnerData.text
-      this.contenders.splice(windex)
+      let items = []
+
+      for (let index = 0; index < this.contenders.length; index++) {
+        let item = this.contenders[index]
+        for (let count = 0; count < item.chances; count++) {
+          items.push(item.text)
+        }
+      }
+      this.winner = items[Math.floor(Math.random() * Math.floor(items.length))]
+      console.log('WIN', this.winner)
+
+      let windex = this.contenders.findIndex((element) => element.text === this.winner)
+      let element = this.contenders[windex]
+
+      if (element.chances > 1) {
+        element.chances--
+      } else {
+        this.deleteContender(windex)
+      }
     },
   },
 }
