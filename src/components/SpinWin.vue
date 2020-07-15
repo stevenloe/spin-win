@@ -10,7 +10,7 @@
 
           <div class="heading marg-right">
             Spin & Win
-            <span class="gray"> Total chances: {{ contenders.length }}</span>
+            <span class="gray"> Total contestants: {{ contenders.length }}</span>
           </div>
 
           <b-alert show variant="danger" v-show="errorMsg.length">{{ errorMsg }}</b-alert>
@@ -27,13 +27,13 @@
           </b-input-group>
         </div>
 
-        <div class="top5">
+        <div class="top_space">
           <b-button variant="success" @click="spin()">Spin!</b-button>
         </div>
 
-        <div class="top5" v-show="winner.length && errorMsg.length === 0">
+        <div class="top_space" v-show="winner.length && errorMsg.length === 0">
           <b-card
-            title="We spun, you won!!!"
+            title="We spun, you won!"
             img-src="https://picsum.photos/600/300/"
             img-alt="Image"
             img-top
@@ -49,7 +49,11 @@
           </b-card>
         </div>
 
-        <b-list-group class="top5">
+        <b-list-group class="top_space">
+          <b-list-group-item variant="secondary" class="d-flex justify-content-between align-items-center">
+            <span class="sm_label">Contender</span>
+            <span class="sm_label">Number of Entries</span>
+          </b-list-group-item>
           <b-list-group-item
             class="d-flex justify-content-between align-items-center"
             v-for="(contender, i) in contenders"
@@ -148,7 +152,7 @@ export default {
 </script>
 
 <style scoped>
-.top5 {
+.top_space {
   margin-top: 3rem;
 }
 
@@ -164,7 +168,9 @@ export default {
 .marg-right {
   margin-right: 3rem;
 }
-.bolder {
-  font-weight: bold;
+.sm_label {
+  font-size: 0.9em;
+  font-weight: 700;
+  font-style: italic;
 }
 </style>
