@@ -1,5 +1,8 @@
 # spinwin
 
+## A simple Vue.js app for selecting a contest winner from a list of contestants with 1 - n entires per contestant.
+### Each time a contestant wins, their number of entries is reduced by one.
+
 ## Project setup
 ```
 npm install

@@ -3,6 +3,11 @@
     <div>
       <b-container>
         <div>
+          <h5>
+            A simple Vue.js app for selecting a contest winner from a list of contestants with 1 - n entires per
+            contestant. Each time a contestant wins, that contestants number of entries is reduced by one.
+          </h5>
+
           <div class="heading marg-right">
             Spin & Win
             <span class="gray"> Total chances: {{ contenders.length }}</span>
@@ -28,10 +33,21 @@
         </div>
 
         <div class="top5" v-show="winner.length">
-          <b-jumbotron header="We spun, you won!" lead="And the winner is...">
-            <h1 class="big">{{ winner }}</h1>
-            <b-button @click="winner = ''">Dismiss</b-button>
-          </b-jumbotron>
+          <b-card
+            title="We spun, you won!!!"
+            img-src="https://picsum.photos/600/300/"
+            img-alt="Image"
+            img-top
+            tag="article"
+            style="max-width: 20rem;"
+            class="mb-2"
+          >
+            <b-card-text>
+              And the winner is: <strong>{{ winner }}!</strong>
+            </b-card-text>
+
+            <b-button @click="winner = ''">Close</b-button>
+          </b-card>
         </div>
 
         <b-list-group class="top5">
@@ -136,10 +152,7 @@ export default {
 .top5 {
   margin-top: 3rem;
 }
-.big {
-  font-size: 8em;
-  color: royalblue;
-}
+
 .heading {
   font-weight: 700;
   font-size: 3em;
