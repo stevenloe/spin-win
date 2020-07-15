@@ -17,7 +17,6 @@
 
           <b-input-group prepend="Add Contender:" class="mb-2" @keyup.enter="add()">
             <b-form-input v-model="contender" ref="name" placeholder="Name" @focus="errorMsg = ''"></b-form-input>
-
             <b-form-input type="number" placeholder="chances" v-model="chances" @focus="errorMsg = ''"></b-form-input>
 
             <b-input-group-append
@@ -32,7 +31,7 @@
           <b-button variant="success" @click="spin()">Spin!</b-button>
         </div>
 
-        <div class="top5" v-show="winner.length">
+        <div class="top5" v-show="winner.length && errorMsg.length === 0">
           <b-card
             title="We spun, you won!!!"
             img-src="https://picsum.photos/600/300/"
