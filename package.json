@@ -10,6 +10,7 @@
     "bootstrap": "^4.5.0",
     "bootstrap-vue": "^2.15.0",
     "core-js": "^3.6.5",
+    "eslint-plugin-es-beautifier": "^1.0.1",
     "vue": "^2.6.11"
   },
   "devDependencies": {
