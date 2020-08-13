@@ -62,7 +62,7 @@ export default {
     },
     spin() {
       if (this.contenders.length < 2) {
-        this.appErrorMsg =
+        this.appErrorMsg +=
           "You must add contenders before a winner can be selected.";
         return;
       }

@@ -5,7 +5,7 @@
       <b-col  cols="11" class="heading">
         Spin to Win!
       </b-col>
-      <b-col cols="1" class="right" style="background-color:pink">
+      <b-col cols="1" class="right">
         <b-button variant="success" v-bind:class="{ disabled_button: isDisabled }" :disabled="isDisabled" size="lg" @click="$emit('spin')">Spin!</b-button>
       </b-col>
     </b-row>
@@ -58,9 +58,6 @@ export default {
   color: #666;
   font-size: 1rem;
   font-weight: 500;
-}
-.marg-right {
-  padding-right: 5rem;
 }
 
 .disabled_button {
