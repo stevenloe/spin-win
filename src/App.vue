@@ -1,13 +1,31 @@
 <template>
   <div id="app">
     <b-container>
-      <heading></heading>
+
+      <heading :app-error="appErrorMsg"></heading>
+
       <b-container class="subtle-border">
-        <spin-win :is-disabled="isDisabled" :winner-name="winnerName" v-on:spin="spin"></spin-win>
-        <b-alert show variant="danger" v-show="appErrorMsg.length">{{ appErrorMsg }}</b-alert>
-        <contender-form v-on:addContestant="add($event)"></contender-form>
-        <contender-list :contenders="contenders" v-on:delete-contender="deleteContender($event)"></contender-list>
+
+        <spin-win :is-disabled="isDisabled" 
+          :winner-name="winnerName" 
+          v-on:spin="spin">
+        </spin-win>
+        
+        <contender-form 
+          :show-contenders="showContenders"
+          v-on:show-hide="showHideContenders($event)"
+          v-on:addContestant="add($event)" 
+          v-on:errors="errors($event)">
+        </contender-form>
+
+        <contender-list 
+          :show-contenders="showContenders"
+          :contenders="contenders" 
+          v-on:delete-contender="deleteContender($event)">
+        </contender-list>
+
       </b-container>
+
     </b-container>
   </div>
 </template>
@@ -36,22 +54,18 @@ export default {
       ],
       winnerName: "",
       appErrorMsg: "",
+      showContenders: true
     };
   },
   computed: {
     isDisabled() {
       return this.contenders.length < 2;
-    },
+    }
   },
   methods: {
     add(newContender) {
-      if (
-        this.contenders.some(
-          (elem) => elem.text.toLowerCase() === newContender.text.toLowerCase()
-        )
-      ) {
-        this.appErrorMsg +=
-          "A contestant with that name has already been entered. Please enter a different name. ";
+      if (this.contenders.some((elem) => elem.text.toLowerCase() === newContender.text.toLowerCase())) {
+        this.errors("A contestant with that name has already been entered. Please enter a different name.")
       } else {
         this.contenders.unshift(newContender);
         this.appErrorMsg = "";
@@ -89,8 +103,12 @@ export default {
         this.deleteContender(winnerIndex);
       }
     },
+    
     errors(msg) {
       this.appErrorMsg = msg;
+    },
+    showHideContenders(){
+      this.showContenders = !this.showContenders;
     },
   },
 };
@@ -124,6 +142,15 @@ export default {
   font-family: "MuseoSansRegular";
   src: local("MuseoSansRegular"),
     url(../public/fonts/museo_sans/MuseoSans_500.otf) format("opentype");
+}
+
+.small-link {
+  text-align:right;
+  font-size: .8rem;
+  color: #999;
+  text-decoration: underline;
+  margin-bottom: .5rem;
+  cursor: pointer;
 }
 </style>
 

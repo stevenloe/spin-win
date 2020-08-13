@@ -2,17 +2,22 @@
 <b-container>
 
     <b-row align-v="center">
-      <b-col  cols="11" class="heading">
+      <b-col  cols="10" class="heading pl-0">
         Spin to Win!
       </b-col>
-      <b-col cols="1" class="right">
-        <b-button variant="success" v-bind:class="{ disabled_button: isDisabled }" :disabled="isDisabled" size="lg" @click="$emit('spin')">Spin!</b-button>
+      <b-col cols="2" class="text-right pr-0">
+        <b-button variant="success" 
+          v-bind:class="{ disabled_button: isDisabled }" 
+          :disabled="isDisabled" 
+          size="lg" 
+          @click="$emit('spin')">Spin!
+        </b-button>
       </b-col>
     </b-row>
 
     <!-- winner card -->
-    <div class="top_space" v-show="winnerName.length && errorMsg.length === 0">
-      <b-card title="Congratulations to our winner:" img-src="./winner_images/winner_0.jpg" img-alt="Pampered Chef product image" img-top tag="article" style="max-width: 20rem;" class="mb-2">
+    <div class="top_space" v-show="winnerName.length">
+      <b-card title="Congratulations to our winner:" img-src="./winner_images/winner_0.jpg" img-alt="Pampered Chef winner image" img-top tag="article" style="max-width: 20rem;" class="mb-2">
         <p class="win">
           {{ winnerName }}!
         </p>
@@ -39,7 +44,6 @@ export default {
   },
   data() {
     return {
-      errorMsg: "",
     };
   }
 };
@@ -52,7 +56,7 @@ export default {
 
 .heading {
   font-weight: 700;
-  font-size: 3em;
+  font-size: 3rem;
 }
 .gray {
   color: #666;

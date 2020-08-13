@@ -1,5 +1,5 @@
 <template>
-  <b-list-group>
+  <b-list-group v-show="showContenders">
     <b-list-group-item variant="secondary" class="d-flex justify-content-between" >
       <span class="sm_label">Contender</span>
       <span class="sm_label">Number of Entries</span>
@@ -22,6 +22,10 @@ export default {
       type: Array,
       required: true,
     },
+    showContenders: {
+      type: Boolean,
+      required: true
+    }
   },
 };
 </script>
@@ -29,7 +33,7 @@ export default {
 
 <style scoped>
   .sm_label {
-    font-size: 0.9em;
+    font-size: 0.9rem;
     font-weight: 700;
     font-style: italic;
   }

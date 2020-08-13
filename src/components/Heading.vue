@@ -12,13 +12,13 @@
       </b-row>
     </div>
 
-    <b-card v-show="showForm" class="text-center bg-gray" title="Create labels for this drawing">
+    <b-card v-show="showForm" class="text-center bg-gray" title="Edit labels for this drawing:">
       <b-card-body class="heading-form">
         <b-row>
-          <b-col><input v-model="form.labelLeft" placeholder="Enter Left Label"></b-col>
-          <b-col><input v-model="form.textLeft" placeholder="Enter Left Text"></b-col>
-          <b-col><input v-model="form.labelRight" placeholder="Enter Right Label"></b-col>
-          <b-col><input v-model="form.textRight" placeholder="Enter Right Text"></b-col>
+          <b-col cols="2"><input v-model="form.labelLeft" placeholder="Enter Left Label" size="15"></b-col>
+          <b-col cols="4"><input v-model="form.textLeft" placeholder="Enter Left Text" size="30"></b-col>
+          <b-col cols="2"><input v-model="form.labelRight" placeholder="Enter Right Label" size="15"></b-col>
+          <b-col cols="4"><input v-model="form.textRight" placeholder="Enter Right Text" size="30"></b-col>
         </b-row>
 
         <b-row class="right mt-3 mr-1">
@@ -27,11 +27,10 @@
           </b-col>
         </b-row>
       </b-card-body>
-
     </b-card>
 
     <b-row @click="showForm=true" class="the-details">
-      <b-col style="padding-left:0 !important">
+      <b-col style="padding-left:0 !important; margin-left:0 !important">
         <span class="label">{{ form.labelLeft }}</span>
         <span class="msg"> {{ form.textLeft }}</span>
       </b-col>
@@ -40,24 +39,31 @@
         <span class="msg">{{ form.textRight }}</span>
       </b-col>
     </b-row>
-  </div>
+
+    <div class="small-link"><span @click="showForm=!showForm">edit labels</span></div>
+
+    <b-alert show variant="danger" v-show="appError.length">{{ appError }}</b-alert>
   </div>
 </template>
 
 <script>
-
 export default {
   name: "heading",
-
+  props: {
+    appError: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       form: {
-        labelLeft: 'Party:',
-        textLeft:  'Swanky\'s Spatula Fest!',
-        labelRight: 'Drawing:',
+        labelLeft: "Party:",
+        textLeft: "Swanky's Spatula Fest!",
+        labelRight: "Drawing:",
         textRight: "Winner winner chicken dinner",
       },
-      showForm: true,
+      showForm: false,
     };
   },
 };
@@ -66,12 +72,12 @@ export default {
 <style scoped>
 .heading {
   font-family: "Filosophia", Georgia, serif;
-  font-size: 2em;
+  font-size: 2rem;
 }
 
 .heading-form {
   font-family: "MuseoSansRegular", Avenir, Helvetica, Arial, sans-serif;
-  font-size: 1em !important;
+  font-size: 1rem !important;
 }
 
 .heading-text {
@@ -87,8 +93,9 @@ export default {
 .the-details {
   font-family: "Antonio", Impact, Haettenschweiler, "Arial Narrow Bold",
     sans-serif;
-  margin: 1em 0;
-  font-size: 2em;
+  margin: 1em 0 0 0;
+  padding-left: 0;
+  font-size: 2rem;
   cursor: pointer;
 }
 

@@ -1,29 +1,38 @@
 <template>
   <div>
-    <b-alert show variant="danger" v-show="errorMsg.length">{{ errorMsg }}</b-alert>
+    <div class="small-link"><span @click="$emit('show-hide')">{{ showContenders ? 'Hide' : 'Show'}} Contenders</span></div>
 
-    <b-input-group prepend="New Contender:" class="mb-2" @keyup.enter="validateContestant()">
-      <b-form-input v-model="contender" ref="name" placeholder="Name" @focus="errorMsg = ''"></b-form-input>
-      <b-form-input type="number" placeholder="chances" v-model="chances" @focus="errorMsg = ''"></b-form-input>
+    <div v-show="showContenders">
+      <hr>
+      <b-input-group prepend="New Contender:" class="mb-2" @keyup.enter="validateContestant()">
+        <b-form-input v-model="contender" ref="name" placeholder="Name"></b-form-input>
+        <b-form-input type="number" placeholder="chances" v-model="chances"></b-form-input>
 
-      <b-input-group-append>
-        <b-button variant="primary" v-on:click="validateContestant()">
-          Add
-        </b-button>
-      </b-input-group-append>
+        <b-input-group-append>
+          <b-button v-on:click="validateContestant()">
+            Add
+          </b-button>
+        </b-input-group-append>
 
-    </b-input-group>
+      </b-input-group>
+
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: "contender-form",
+  props: {
+    showContenders: {
+      type: Boolean,
+      required: true,
+    },
+  },
   data() {
     return {
       contender: "",
       chances: 1,
-      errorMsg: "",
     };
   },
   methods: {
@@ -45,14 +54,16 @@ export default {
       let isValid = true;
 
       if (name.length === 0) {
-        msg += "Name cannot be blank. ";
+        msg += "Please enter the contender's name. ";
         isValid = false;
       }
       if (this.chances < 1) {
         msg += "Number of entries must be a number greater than 0. ";
         isValid = false;
       }
-      this.errorMsg = this.msg;
+
+      this.$emit("errors", msg);
+
       return isValid;
     },
   },
