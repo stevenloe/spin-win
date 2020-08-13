@@ -45,11 +45,10 @@
 </template>
 
 <script>
-import BaseInput from "@/components/BaseInput";
 
 export default {
   name: "heading",
-  components: { BaseInput },
+
   data() {
     return {
       form: {
