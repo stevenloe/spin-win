@@ -36,6 +36,7 @@ import Heading from "./components/Heading";
 import ContenderList from "./components/ContenderList";
 import ContenderForm from "./components/ContenderForm";
 
+
 export default {
   name: "App",
   components: {
