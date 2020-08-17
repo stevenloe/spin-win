@@ -14,88 +14,11 @@
     <b-row>
       <b-col>-spin-</b-col>
       <div class="spin-wrapper">
-          <ul class="list">
-            <li>Lorem.</li>
-            <li>Quae!</li>
-            <li>Numquam.</li>
-            <li>Aut!</li>
-            <li>Repellat?</li>
-            <li>At.</li>
-            <li>Commodi?</li>
-            <li>Qui.</li>
-            <li>Voluptate.</li>
-            <li>Obcaecati!</li>
-            <li>Animi.</li>
-            <li>Quibusdam!</li>
-            <li>Totam.</li>
-            <li>Iste!</li>
-            <li>Aspernatur?</li>
-            <li>Placeat?</li>
-            <li>Ratione!</li>
-            <li>Delectus.</li>
-            <li>Alias?</li>
-            <li>Assumenda.</li>
-            <li>Dolores.</li>
-            <li>Sunt?</li>
-            <li>Consectetur?</li>
-            <li>Fuga.</li>
-            <li>Sed.</li>
-            <li>Consequatur?</li>
-            <li>Consequatur.</li>
-            <li>Voluptatem!</li>
-            <li>Eos.</li>
-            <li>Molestiae?</li>
-            <li>Pariatur.</li>
-            <li>Non?</li>
-            <li>Voluptatum.</li>
-            <li>Fugiat.</li>
-            <li>Mollitia.</li>
-            <li>Iusto.</li>
-            <li>Minima.</li>
-            <li>Vero.</li>
-            <li>Perspiciatis!</li>
-            <li>Unde!</li>
-            <li>Spiffcus</li>
-            <li>Swankicus!</li>
-            <li>Swillicus!</li>
-            <li>Obcaecati.</li>
-            <li>Tempora!</li>
-            <li>Tempora?</li>
-            <li id='target-item'>Target Item</li>
-            <li>Voluptatum.</li>
-            <li>Facilis!</li>
-            <li>Quasi?</li>
-            <li>In.</li>
-            <li>Autem.</li>
-            <li>Sapiente.</li>
-            <li>Placeat?</li>
-            <li>Ratione!</li>
-            <li>Delectus.</li>
-            <li>Alias?</li>
-            <li>Assumenda.</li>
-            <li>Dolores.</li>
-            <li>Sunt?</li>
-            <li>Consectetur?</li>
-            <li>Fuga.</li>
-            <li>Sed.</li>
-            <li>Consequatur?</li>
-            <li>Consequatur.</li>
-            <li>Voluptatem!</li>
-            <li>Eos.</li>
-            <li>Molestiae?</li>
-            <li>Pariatur.</li>
-            <li>Non?</li>
-            <li>Voluptatum.</li>
-            <li>Fugiat.</li>
-            <li>Mollitia.</li>
-            <li>Iusto.</li>
-            <li>Minima.</li>
-            <li>Vero.</li>
-            <li>Perspiciatis!</li>
-            <li>Unde!</li>
-          </ul>
-        </div>
-  
+        <ul class="list">
+          <li v-for="(name, index) in names" :key="index" :id="`name-${index}`">{{ name }} : {{ index }}</li>
+        </ul>
+      </div>
+
     </b-row>
 
     <!-- winner card -->
@@ -117,39 +40,60 @@ import gsap from "gsap";
 export default {
   name: "Spin-and-Win",
   props: {
+    contenders: {
+      type: Array,
+      required: true,
+    },
     isDisabled: {
       type: Boolean,
       required: true,
     },
-    winnerName: {
-      type: String,
-      required: true,
-      default: "",
-    },
   },
   data() {
-    return {};
+    return {
+      winnerName: "",
+      targetElement: null
+    };
   },
-  mounted() {
-    const distance = -Math.abs(document.querySelector('.list').getBoundingClientRect().top - document.querySelector('#target-item').offsetTop)
-    gsap.to(".list", {
-      duration: 7,
-      ease: "elastic.out(1, .1)",
-      y: distance,
-      onComplete: this.showWinner,
-    });
-  },
-  methods: {
-    showWinner() {
-      const elem = document.querySelector("#target-item");
-      elem.classList.add("listWinner");
-      gsap.to("#target-item", {
-        duration: 0.2,
-        rotation: 5,
-        scaleX: 1.3,
-        scaleY: 1.3,
-      });
+  computed: {
+    names() {
+      let list = [];
+      const tempNames = this.contenders.map((contender) => contender.text);
+
+      for (let i = 0; i < 20; i++) {
+        tempNames.forEach((element) => {
+          list.push(element);
+        });
+      }
+      return list;
     },
+  },
+    methods: {
+      animateWinner(winnerIndex) {
+        let targetId =
+          "#name-" + (this.contenders.length * 10 + winnerIndex + 1);
+
+        this.targetElement = document.querySelector(targetId)
+        const distance = -Math.abs(
+          document.querySelector(".list").getBoundingClientRect().top -
+            this.targetElement.offsetTop
+        );
+        gsap.to(".list", {
+          duration: 10,
+          ease: "elastic.out(1, .1)",
+          y: distance,
+          onComplete: this.highlightWinner
+        });
+      },
+      highlightWinner() {
+        this.targetElement.classList.add("listWinner");
+        gsap.to(this.targetElement, {
+          duration: 0.2,
+          rotation: 5,
+          scaleX: 1.3,
+          scaleY: 1.3,
+        });
+      }
   },
 };
 </script>

@@ -6,22 +6,28 @@
 
       <b-container class="subtle-border">
 
-        <spin-win :is-disabled="isDisabled" 
-          :winner-name="winnerName" 
-          v-on:spin="spin">
+        <spin-win 
+          v-on:spin="spin"
+          :contenders="contenders" 
+          :is-disabled="isDisabled" 
+          ref="spinWin"
+          >
         </spin-win>
         
         <contender-form 
-          :show-contenders="showContenders"
+          
           v-on:show-hide="showHideContenders($event)"
           v-on:addContestant="add($event)" 
-          v-on:errors="errors($event)">
+          v-on:errors="errors($event)"
+          :show-contenders="showContenders"
+          >
         </contender-form>
 
         <contender-list 
+          v-on:delete-contender="deleteContender($event)"
           :show-contenders="showContenders"
           :contenders="contenders" 
-          v-on:delete-contender="deleteContender($event)">
+          >
         </contender-list>
 
       </b-container>
@@ -52,9 +58,12 @@ export default {
         { text: "Fluffy McGuinnis", chances: 3 },
         { text: "Squawkalottapus", chances: 3 },
         { text: "Qwerty", chances: 3 },
+        { text: "Tallulah", chances: 3 },
+        { text: "Violet", chances: 3 },
+        { text: "Phinneas", chances: 3 },
       ],
-      winnerName: "",
-      appErrorMsg: "",
+      winnerIndex: 0,
+      appErrorMsg: '',
       showContenders: true
     };
   },
@@ -90,19 +99,21 @@ export default {
         }
       });
 
-      const winnerIndex =
+      this.winnerIndex =
         contestEntries[
           Math.floor(Math.random() * Math.floor(contestEntries.length))
         ];
-      const winner = this.contenders[winnerIndex];
-      this.winnerName = winner.text;
+      const winner = this.contenders[this.winnerIndex];
 
       // Reduce constant's chances by 1 or remove contestant
-      if (this.contenders[winnerIndex].chances > 1) {
-        this.contenders[winnerIndex].chances -= 1;
+      if (this.contenders[this.winnerIndex].chances > 1) {
+        this.contenders[this.winnerIndex].chances -= 1;
       } else {
-        this.deleteContender(winnerIndex);
+        this.deleteContender(this.winnerIndex);
       }
+      //this.refs.spinWin.animateWinner(this.this.winnerIndex)
+
+      this.$refs.spinWin.animateWinner(this.winnerIndex);
     },
     
     errors(msg) {
