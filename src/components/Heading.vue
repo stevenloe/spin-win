@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="heading" v-show="false">
+    <div class="heading">
       <b-row align-v="center">
         <b-col cols="2" class="d-none d-xl-block">
           <b-img src="./images/me.jpg" width="150" thumbnail fluid alt="Shelby"></b-img>

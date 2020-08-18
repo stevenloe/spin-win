@@ -6,7 +6,7 @@
         Spin to Win!
       </b-col>
       <b-col cols="2" class="text-right pr-0">
-        <b-button variant="success" v-bind:class="{ disabled_button: isDisabled }" :disabled="isDisabled" size="lg" @click="$emit('spin')">Spin!
+        <b-button id="button-spin" variant="success" v-bind:class="{ disabled_button: isDisabled }" :disabled="isDisabled" size="lg" @click="spinClick">Spin!
         </b-button>
       </b-col>
     </b-row>
@@ -52,15 +52,19 @@ export default {
   data() {
     return {
       winnerName: "",
-      targetElement: null
+      targetElement: null,
     };
   },
+  // TODO: Names array needs to be recreated each time spin() is run. 
+  // Reason: each time we run spin(), the contender's chances are decremented.
+  // If we don't create the list each time spin is run, we'll eventually end up 
+  // with list items here being the targets for contestants that are no longer in the contest
   computed: {
     names() {
       let list = [];
       const tempNames = this.contenders.map((contender) => contender.text);
 
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 16; i++) {
         tempNames.forEach((element) => {
           list.push(element);
         });
@@ -68,32 +72,43 @@ export default {
       return list;
     },
   },
-    methods: {
-      animateWinner(winnerIndex) {
-        let targetId =
-          "#name-" + (this.contenders.length * 10 + winnerIndex + 1);
+  methods: {
+    animateWinner(winnerIndex) {
+      if (this.targetElement) {
+        this.targetElement.classList.remove("listWinner");
+      }
 
-        this.targetElement = document.querySelector(targetId)
-        const distance = -Math.abs(
-          document.querySelector(".list").getBoundingClientRect().top -
-            this.targetElement.offsetTop
+      let  targetId = "#name-" + (this.contenders.length * 10 + winnerIndex);
+      this.targetElement = document.querySelector(targetId);
+      
+      const list = document.querySelector(".list");
+       let distance = -Math.abs(
+          list.getBoundingClientRect().top - this.targetElement.getBoundingClientRect().top 
         );
-        gsap.to(".list", {
-          duration: 10,
+
+        // Reset list position
+        gsap.to(list, {
+          duration: .5,
+          ease: "elastic.out(1, .1)",
+          y: 0,
+        });
+   
+        // animate list scroll
+        gsap.to(list, {
+          delay: .5,
+          duration: 12,
           ease: "elastic.out(1, .1)",
           y: distance,
-          onComplete: this.highlightWinner
+          onComplete: this.highlightWinner,
         });
-      },
-      highlightWinner() {
-        this.targetElement.classList.add("listWinner");
-        gsap.to(this.targetElement, {
-          duration: 0.2,
-          rotation: 5,
-          scaleX: 1.3,
-          scaleY: 1.3,
-        });
-      }
+    },
+    highlightWinner() {
+      this.targetElement.classList.add("listWinner");
+    },
+    spinClick() {
+      this.$emit("spin");
+      gsap.from("#button-spin", { scale: 1.5, duration: 0.5, ease: "back" });
+    },
   },
 };
 </script>
@@ -121,7 +136,8 @@ li {
 }
 
 .listWinner {
-  background-color: pink;
+  background-color: #eef;
+  transform: scale(1.1);
 }
 
 /* -- Winner Card styles-- */

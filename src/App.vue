@@ -103,7 +103,6 @@ export default {
         contestEntries[
           Math.floor(Math.random() * Math.floor(contestEntries.length))
         ];
-      const winner = this.contenders[this.winnerIndex];
 
       // Reduce constant's chances by 1 or remove contestant
       if (this.contenders[this.winnerIndex].chances > 1) {
@@ -111,8 +110,6 @@ export default {
       } else {
         this.deleteContender(this.winnerIndex);
       }
-      //this.refs.spinWin.animateWinner(this.this.winnerIndex)
-
       this.$refs.spinWin.animateWinner(this.winnerIndex);
     },
     
